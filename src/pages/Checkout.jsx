@@ -84,7 +84,7 @@ export default function Checkout() {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (!orderingOpen) return
     const errs = validate()
@@ -102,27 +102,37 @@ export default function Checkout() {
       customization: i.customization || { add: '', remove: '', notes: '' },
     }))
 
-    const { id: orderId, displayCode } = addOrder({
-      orderType,
-      customer: {
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        address: form.address.trim(),
-        floor: form.floor.trim(),
-        store: form.store,
-        payment: form.payment,
-        notes: form.notes.trim(),
-      },
-      items: lineItems,
-      subtotal,
-      couponDiscount,
-      deliveryCost,
-      total: finalTotal,
-      coupon: coupon.applied
-        ? { code: coupon.code, description: coupon.description }
-        : null,
-    })
+    let orderId
+    let displayCode
+    try {
+      const created = await addOrder({
+        orderType,
+        customer: {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+          floor: form.floor.trim(),
+          store: form.store,
+          payment: form.payment,
+          notes: form.notes.trim(),
+        },
+        items: lineItems,
+        subtotal,
+        couponDiscount,
+        deliveryCost,
+        total: finalTotal,
+        coupon: coupon.applied
+          ? { code: coupon.code, description: coupon.description }
+          : null,
+      })
+      orderId = created.id
+      displayCode = created.displayCode
+    } catch (err) {
+      console.error('Order submit failed:', err)
+      alert('Η παραγγελία δεν στάλθηκε. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.')
+      return
+    }
 
     clearCart()
     navigate('/order-success', {

@@ -1,3 +1,11 @@
+import { hasSupabase } from './supabaseClient'
+import {
+  fetchRemoteOrders,
+  createRemoteOrder,
+  acceptRemoteOrder,
+  completeRemoteOrder,
+} from './ordersRemote'
+
 export const ORDERS_STORAGE_KEY = 'souvlaki-orders'
 const BC_NAME = 'souvlaki-orders-sync'
 
@@ -11,6 +19,7 @@ function getChannel() {
 
 /** Καλείται μετά από κάθε αλλαγή παραγγελιών ώστε άλλες καρτέλες να διαβάσουν το localStorage */
 export function notifyOrdersChanged() {
+  if (hasSupabase) return
   queueMicrotask(() => {
     try {
       getChannel()?.postMessage({ type: 'orders-updated', t: Date.now() })
@@ -51,13 +60,50 @@ export function readPersistedOrdersSlice() {
   }
 }
 
+export async function readUnifiedOrders() {
+  if (hasSupabase) return fetchRemoteOrders()
+  const local = readPersistedOrdersSlice()
+  if (!local) return null
+  return [...(local.orders || []), ...(local.orderHistory || [])]
+}
+
+export async function createUnifiedOrder(payload) {
+  if (hasSupabase) return createRemoteOrder(payload)
+  return null
+}
+
+export async function acceptUnifiedOrder(id, opts) {
+  if (hasSupabase) return acceptRemoteOrder(id, opts)
+  return false
+}
+
+export async function completeUnifiedOrder(id) {
+  if (hasSupabase) return completeRemoteOrder(id)
+  return false
+}
+
 /**
- * @param {() => void} onUpdate — καλείται όταν πιθανώς άλλαξαν δεδομένα στο localStorage
+ * @param {() => void} onUpdate — καλείται όταν πιθανώς άλλαξαν δεδομένα
  * @returns {() => void} cleanup
  */
 export function subscribeOrdersRemote(onUpdate) {
   const run = () => {
     onUpdate()
+  }
+
+  if (hasSupabase) {
+    run()
+    const poll = setInterval(run, 2000)
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') run()
+    }
+    window.addEventListener('focus', run)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(poll)
+      window.removeEventListener('focus', run)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }
 
   const onStorage = (e) => {
@@ -69,7 +115,6 @@ export function subscribeOrdersRemote(onUpdate) {
   const onBc = () => run()
   ch?.addEventListener('message', onBc)
 
-  // Γρήγορο polling ως εφεδρικό (ίδια καρτέλα / edge cases)
   const pollMs = 500
   const poll = setInterval(run, pollMs)
 

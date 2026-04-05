@@ -1,3 +1,6 @@
+import { hasSupabase } from './supabaseClient'
+import { fetchRemoteShopSettings, saveRemoteShopSettings } from './shopSettingsRemote'
+
 export const SHOP_SETTINGS_STORAGE_KEY = 'souvlaki-shop'
 const BC_NAME = 'souvlaki-shop-sync'
 
@@ -10,6 +13,7 @@ function getChannel() {
 }
 
 export function notifyShopSettingsChanged() {
+  if (hasSupabase) return
   queueMicrotask(() => {
     try {
       getChannel()?.postMessage({ type: 'shop-updated', t: Date.now() })
@@ -40,12 +44,38 @@ export function readPersistedShopSlice() {
   }
 }
 
+export async function readUnifiedShopSettings() {
+  if (hasSupabase) return fetchRemoteShopSettings()
+  return readPersistedShopSlice()
+}
+
+export async function persistUnifiedShopSettings(snapshot) {
+  if (hasSupabase) return saveRemoteShopSettings(snapshot)
+  notifyShopSettingsChanged()
+  return true
+}
+
 /**
  * @param {() => void} onUpdate
  * @returns {() => void}
  */
 export function subscribeShopSettingsRemote(onUpdate) {
   const run = () => onUpdate()
+
+  if (hasSupabase) {
+    run()
+    const poll = setInterval(run, 2500)
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') run()
+    }
+    window.addEventListener('focus', run)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(poll)
+      window.removeEventListener('focus', run)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }
 
   const onStorage = (e) => {
     if (e.key === SHOP_SETTINGS_STORAGE_KEY && e.newValue) run()

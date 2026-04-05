@@ -4,6 +4,7 @@ import { syncOrdersFromPersistedStorage } from './store/ordersStore'
 import { syncShopSettingsFromStorage } from './store/shopSettingsStore'
 import { subscribeOrdersRemote } from './utils/orderSync'
 import { subscribeShopSettingsRemote } from './utils/shopSettingsSync'
+import { startSiteVisitHeartbeat, touchSiteVisit } from './utils/siteAnalytics'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import CartDrawer from './components/CartDrawer'
@@ -21,14 +22,24 @@ function AppShell() {
 
   useEffect(() => {
     if (isAdmin) return
-    syncOrdersFromPersistedStorage()
+    void syncOrdersFromPersistedStorage()
     return subscribeOrdersRemote(syncOrdersFromPersistedStorage)
   }, [isAdmin])
 
   useEffect(() => {
-    syncShopSettingsFromStorage()
+    void syncShopSettingsFromStorage()
     return subscribeShopSettingsRemote(syncShopSettingsFromStorage)
   }, [])
+
+  useEffect(() => {
+    if (isAdmin) return undefined
+    return startSiteVisitHeartbeat(() => window.location.pathname)
+  }, [isAdmin])
+
+  useEffect(() => {
+    if (isAdmin) return
+    void touchSiteVisit(pathname)
+  }, [isAdmin, pathname])
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

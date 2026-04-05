@@ -10,7 +10,7 @@ function ProductRow({ item, onAdd, addedId, orderingDisabled }) {
   const cannotOrder = orderingDisabled || soldOut
 
   return (
-    <div className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 -mx-2 px-2 rounded-lg transition-colors ${soldOut ? 'opacity-75' : ''}`}>
+    <div className={`flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 py-3 border-b border-gray-100/80 last:border-0 hover:bg-white/70 -mx-2 px-2 rounded-lg transition-all ${soldOut ? 'opacity-75' : ''}`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <h3 className="font-semibold text-gray-800 text-sm leading-tight">{item.name}</h3>
@@ -55,7 +55,7 @@ function ProductRow({ item, onAdd, addedId, orderingDisabled }) {
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
               : isAdded
                 ? 'bg-green-500 text-white scale-95 cursor-pointer active:scale-95'
-                : 'bg-red-600 hover:bg-red-700 text-white hover:scale-105 cursor-pointer active:scale-95'
+                : 'button-3d-red text-white hover:scale-105 cursor-pointer active:scale-95'
           }`}
         >
           {isAdded ? (
@@ -161,7 +161,7 @@ export default function Menu() {
         />
       )}
       {/* Top bar */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="surface-3d rounded-3xl px-4 py-4 sm:px-5 sm:py-5 flex flex-col sm:flex-row gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-black text-gray-800">Μενού</h1>
           <p className="text-gray-500 text-sm">
@@ -183,7 +183,7 @@ export default function Menu() {
             placeholder="Αναζήτηση προϊόντος..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-red-400 w-full sm:w-64"
+            className="pl-9 pr-4 py-2 border border-white/70 bg-white/90 rounded-xl text-sm focus:outline-none focus:border-red-400 w-full sm:w-64 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_8px_20px_rgba(15,23,42,0.08)]"
           />
         </div>
       </div>
@@ -194,10 +194,10 @@ export default function Menu() {
           <button
             key={cat.id}
             onClick={() => scrollToCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shadow-[0_8px_18px_rgba(15,23,42,0.08)] ${
               activeCategory === cat.id
-                ? 'bg-red-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'button-3d-red text-white'
+                : 'bg-white/90 text-gray-600 hover:bg-gray-100'
             }`}
           >
             {cat.label}
@@ -208,7 +208,7 @@ export default function Menu() {
       <div className="flex gap-6">
         {/* Desktop Sidebar */}
         <aside className="hidden md:block w-48 lg:w-52 shrink-0">
-          <div className="sticky top-20 lg:top-24 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="surface-3d sticky top-20 lg:top-24 rounded-2xl overflow-hidden">
             <div className="bg-red-600 text-white text-xs font-bold px-4 py-2.5 uppercase tracking-wider">
               Κατηγορίες
             </div>
@@ -251,7 +251,7 @@ export default function Menu() {
                   <h2 className="text-lg font-black text-gray-800">{cat.label}</h2>
                   <span className="text-gray-400 text-xs ml-auto">{cat.items.length} προϊόντα</span>
                 </div>
-                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-1">
+                <div className="surface-3d rounded-2xl px-4 py-1">
                   {cat.items.map((item) => (
                     <ProductRow
                       key={item.id}
@@ -273,7 +273,7 @@ export default function Menu() {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="md:hidden fixed bottom-4 left-3 right-3 sm:left-4 sm:right-4 bg-red-600 text-white rounded-2xl px-5 py-3.5 min-h-12 font-bold shadow-xl flex items-center justify-between z-30 cursor-pointer hover:bg-red-700 transition-colors touch-manipulation"
+          className="button-3d-red md:hidden fixed bottom-4 left-3 right-3 sm:left-4 sm:right-4 text-white rounded-2xl px-5 py-3.5 min-h-12 font-bold flex items-center justify-between z-30 cursor-pointer touch-manipulation"
           style={{ marginBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
         >
           <span className="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">{totalItems}</span>

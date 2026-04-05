@@ -1,6 +1,12 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { notifyOrdersChanged, readPersistedOrdersSlice } from '../utils/orderSync'
+import {
+  notifyOrdersChanged,
+  readUnifiedOrders,
+  createUnifiedOrder,
+  acceptUnifiedOrder,
+  completeUnifiedOrder,
+} from '../utils/orderSync'
 
 function generateOrderId() {
   return `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
@@ -10,45 +16,94 @@ function todayKey() {
   return new Date().toDateString()
 }
 
+function normalizeOrder(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  return {
+    id: String(raw.id || generateOrderId()),
+    displayCode: Number(raw.displayCode || 0),
+    createdAt: raw.createdAt || new Date().toISOString(),
+    status: raw.status || 'pending',
+    etaMinutes: raw.etaMinutes != null ? Number(raw.etaMinutes) : null,
+    etaRange: raw.etaRange ?? null,
+    etaNote: raw.etaNote ?? null,
+    acceptedAt: raw.acceptedAt ?? null,
+    completedAt: raw.completedAt ?? null,
+    orderType: raw.orderType || 'delivery',
+    customer: raw.customer && typeof raw.customer === 'object' ? raw.customer : {},
+    items: Array.isArray(raw.items) ? raw.items : [],
+    subtotal: Number(raw.subtotal ?? 0),
+    couponDiscount: Number(raw.couponDiscount ?? 0),
+    deliveryCost: Number(raw.deliveryCost ?? 0),
+    total: Number(raw.total ?? 0),
+    coupon: raw.coupon ?? null,
+    dayKey: String(raw.dayKey || todayKey()),
+    historyDayKey: raw.historyDayKey ?? null,
+    archivedAt: raw.archivedAt ?? null,
+  }
+}
+
+function deriveOrdersState(allOrdersRaw) {
+  const allOrders = (Array.isArray(allOrdersRaw) ? allOrdersRaw : [])
+    .map(normalizeOrder)
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+  const today = todayKey()
+  const orders = allOrders.filter((o) => o.dayKey === today)
+  const orderHistory = allOrders.filter((o) => o.dayKey !== today)
+
+  return {
+    allOrders,
+    orders,
+    orderHistory,
+    ordersDayKey: today,
+  }
+}
+
+function optimisticAccept(order, { etaMinutes, etaNote, etaRange }) {
+  const minutes = etaMinutes != null && etaMinutes !== '' ? Number(etaMinutes) : null
+  const note = (etaNote && String(etaNote).trim()) || null
+  const range =
+    etaRange && ['20-35', '30-45', '40-55'].includes(etaRange) ? etaRange : null
+
+  return {
+    ...order,
+    status: 'accepted',
+    etaRange: range,
+    etaMinutes: range == null && Number.isFinite(minutes) && minutes > 0 ? minutes : null,
+    etaNote: note,
+    acceptedAt: new Date().toISOString(),
+  }
+}
+
 const useOrdersStore = create(
   persist(
     (set, get) => ({
+      allOrders: [],
       orders: [],
-      ordersDayKey: '',
+      ordersDayKey: todayKey(),
       orderHistory: [],
 
       checkDailyReset: () => {
-        const today = todayKey()
-        const { ordersDayKey, orders, orderHistory } = get()
-        if (!ordersDayKey) {
-          set({ ordersDayKey: today })
-          return
-        }
-        if (ordersDayKey !== today) {
-          const archived =
-            orders.length > 0
-              ? orders.map((o) => ({
-                  ...o,
-                  historyDayKey: ordersDayKey,
-                  archivedAt: new Date().toISOString(),
-                }))
-              : []
-          set({
-            orders: [],
-            ordersDayKey: today,
-            orderHistory: [...archived, ...(orderHistory || [])],
-          })
-          notifyOrdersChanged()
-        }
+        set((s) => deriveOrdersState(s.allOrders))
       },
 
-      addOrder: (payload) => {
-        get().checkDailyReset()
+      addOrder: async (payload) => {
+        const incoming = {
+          ...payload,
+          dayKey: todayKey(),
+        }
+
+        const remoteOrder = await createUnifiedOrder(incoming)
+        if (remoteOrder) {
+          set((s) => deriveOrdersState([remoteOrder, ...s.allOrders.filter((o) => o.id !== remoteOrder.id)]))
+          return { id: remoteOrder.id, displayCode: remoteOrder.displayCode }
+        }
+
         const existing = get().orders
-        const displayCode =
-          Math.max(1000, ...existing.map((o) => o.displayCode || 0)) + 1
+        const displayCode = Math.max(1000, ...existing.map((o) => o.displayCode || 0)) + 1
         const id = generateOrderId()
-        const order = {
+        const order = normalizeOrder({
           id,
           displayCode,
           createdAt: new Date().toISOString(),
@@ -58,84 +113,84 @@ const useOrdersStore = create(
           etaNote: null,
           acceptedAt: null,
           completedAt: null,
-          ...payload,
-        }
-        set({ orders: [order, ...existing] })
+          ...incoming,
+        })
+        set((s) => deriveOrdersState([order, ...s.allOrders]))
         notifyOrdersChanged()
         return { id, displayCode }
       },
 
-      /**
-       * @param {object} opts
-       * @param {string} [opts.etaRange] '20-35' | '30-45' | '40-55'
-       * @param {number|null} [opts.etaMinutes] παλιά ροή
-       * @param {string|null} [opts.etaNote]
-       */
-      acceptOrder: (id, { etaMinutes, etaNote, etaRange }) => {
-        const minutes = etaMinutes != null && etaMinutes !== '' ? Number(etaMinutes) : null
-        const note = (etaNote && String(etaNote).trim()) || null
-        const range =
-          etaRange && ['20-35', '30-45', '40-55'].includes(etaRange) ? etaRange : null
-        set({
-          orders: get().orders.map((o) =>
-            o.id === id
-              ? {
-                  ...o,
-                  status: 'accepted',
-                  etaRange: range,
-                  etaMinutes:
-                    range == null && Number.isFinite(minutes) && minutes > 0 ? minutes : null,
-                  etaNote: note,
-                  acceptedAt: new Date().toISOString(),
-                }
-              : o
-          ),
-        })
-        notifyOrdersChanged()
+      acceptOrder: async (id, opts) => {
+        const before = get().allOrders
+        set((s) =>
+          deriveOrdersState(
+            s.allOrders.map((o) => (o.id === id ? optimisticAccept(o, opts) : o))
+          )
+        )
+        try {
+          const saved = await acceptUnifiedOrder(id, opts)
+          if (!saved) notifyOrdersChanged()
+        } catch (err) {
+          console.error('Failed to accept order:', err)
+          set(deriveOrdersState(before))
+        }
       },
 
-      completeOrder: (id) => {
-        set({
-          orders: get().orders.map((o) =>
-            o.id === id
-              ? { ...o, status: 'completed', completedAt: new Date().toISOString() }
-              : o
-          ),
-        })
-        notifyOrdersChanged()
+      completeOrder: async (id) => {
+        const before = get().allOrders
+        set((s) =>
+          deriveOrdersState(
+            s.allOrders.map((o) =>
+              o.id === id ? { ...o, status: 'completed', completedAt: new Date().toISOString() } : o
+            )
+          )
+        )
+        try {
+          const saved = await completeUnifiedOrder(id)
+          if (!saved) notifyOrdersChanged()
+        } catch (err) {
+          console.error('Failed to complete order:', err)
+          set(deriveOrdersState(before))
+        }
       },
 
       getOrderById: (id) => get().orders.find((o) => o.id === id),
 
-      /** Ενεργές παραγγελίες ή ιστορικό (για σελίδα επιτυχίας πελάτη) */
       getOrderByIdAnywhere: (id) => {
         if (!id) return undefined
-        return (
-          get().orders.find((o) => o.id === id) ??
-          (get().orderHistory || []).find((o) => o.id === id)
-        )
+        return get().allOrders.find((o) => o.id === id)
       },
     }),
-    { name: 'souvlaki-orders' }
+    {
+      name: 'souvlaki-orders',
+      merge: (persistedState, currentState) => {
+        if (!persistedState || typeof persistedState !== 'object') return currentState
+        const s = persistedState.state || persistedState
+        const combined = Array.isArray(s.allOrders)
+          ? s.allOrders
+          : [...(Array.isArray(s.orders) ? s.orders : []), ...(Array.isArray(s.orderHistory) ? s.orderHistory : [])]
+        return { ...currentState, ...deriveOrdersState(combined) }
+      },
+    }
   )
 )
 
-/** Συγχρονισμός καρτελών: φόρτωση τελευταίας κατάστασης από localStorage (μετά από admin / άλλη καρτέλα) */
-export function syncOrdersFromPersistedStorage() {
-  const incoming = readPersistedOrdersSlice()
-  if (incoming === null) return
-  const cur = useOrdersStore.getState()
-  const snap = {
-    orders: cur.orders,
-    orderHistory: cur.orderHistory || [],
-    ordersDayKey: cur.ordersDayKey || '',
+export async function syncOrdersFromPersistedStorage() {
+  try {
+    const incoming = await readUnifiedOrders()
+    if (incoming == null) return
+    const next = deriveOrdersState(incoming)
+    const cur = useOrdersStore.getState()
+    if (
+      JSON.stringify(cur.allOrders || []) === JSON.stringify(next.allOrders || []) &&
+      JSON.stringify(cur.orderHistory || []) === JSON.stringify(next.orderHistory || [])
+    ) {
+      return
+    }
+    useOrdersStore.setState(next)
+  } catch (err) {
+    console.error('Failed to sync orders:', err)
   }
-  if (JSON.stringify(snap) === JSON.stringify(incoming)) return
-  useOrdersStore.setState({
-    orders: incoming.orders,
-    orderHistory: incoming.orderHistory,
-    ordersDayKey: incoming.ordersDayKey,
-  })
 }
 
 export function formatEtaLabel(order) {

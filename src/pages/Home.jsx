@@ -7,7 +7,7 @@ import ProductCustomizeModal from '../components/ProductCustomizeModal'
 
 function Toast({ show }) {
   return (
-    <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-lg transition-all duration-300 ${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+    <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-green-600 text-white px-5 py-2.5 rounded-full font-semibold text-sm shadow-[0_16px_32px_rgba(22,163,74,0.35)] transition-all duration-300 ${show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
       Προστέθηκε στο καλάθι
     </div>
   )
@@ -70,9 +70,11 @@ export default function Home() {
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-red-700 via-red-600 to-red-500 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_70%_50%,white,transparent_60%)]" />
+        <div className="absolute -top-10 right-[8%] h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute bottom-0 left-[10%] h-24 w-24 rounded-full bg-yellow-300/20 blur-2xl" />
         <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-20 md:py-28">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wider shadow-[0_12px_26px_rgba(0,0,0,0.18)]">
               <span
                 className={`w-2 h-2 rounded-full shrink-0 ${
                   orderingOpen ? 'bg-green-400 animate-pulse' : 'bg-amber-400'
@@ -91,13 +93,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/menu"
-                className="bg-white text-red-600 font-black px-8 py-4 rounded-2xl text-lg hover:bg-yellow-50 transition-colors shadow-xl text-center"
+                className="button-3d-light text-red-600 font-black px-8 py-4 rounded-2xl text-lg text-center"
               >
                 Παραγγείλτε Τώρα
               </Link>
               <Link
                 to="/menu"
-                className="border-2 border-white/50 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:bg-white/10 transition-colors text-center"
+                className="text-white font-bold px-8 py-4 rounded-2xl text-lg text-center border border-white/35 bg-white/8 backdrop-blur-sm shadow-[0_14px_28px_rgba(0,0,0,0.18),inset_0_1px_0_rgba(255,255,255,0.24)] transition-all hover:-translate-y-0.5 hover:bg-white/12"
               >
                 Δείτε το Μενού
               </Link>
@@ -117,7 +119,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             to="/menu"
-            className="flex items-center gap-4 bg-white border-2 border-gray-100 hover:border-red-400 rounded-2xl p-5 transition-all group shadow-sm hover:shadow-md"
+            className="surface-3d surface-3d-hover flex items-center gap-4 rounded-2xl p-5 group"
           >
             <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center shrink-0">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +134,7 @@ export default function Home() {
           </Link>
           <Link
             to="/menu"
-            className="flex items-center gap-4 bg-white border-2 border-gray-100 hover:border-red-400 rounded-2xl p-5 transition-all group shadow-sm hover:shadow-md"
+            className="surface-3d surface-3d-hover flex items-center gap-4 rounded-2xl p-5 group"
           >
             <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center shrink-0">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +159,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {offers.map((offer) => (
-            <div key={offer.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+            <div key={offer.id} className="surface-3d surface-3d-hover rounded-2xl overflow-hidden">
               <div className="bg-gradient-to-br from-red-600 to-red-700 h-2"></div>
               <div className="p-4">
                 <div className="flex flex-wrap gap-1.5 mb-2">
@@ -192,7 +194,7 @@ export default function Home() {
                     onClick={() => handleAdd(offer)}
                     className={`text-white w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-lg transition-colors touch-manipulation ${
                       orderingOpen && !offer.soldOut
-                        ? 'bg-red-600 hover:bg-red-700 cursor-pointer active:scale-95'
+                        ? 'button-3d-red cursor-pointer active:scale-95'
                         : 'bg-gray-300 cursor-not-allowed'
                     }`}
                   >
@@ -216,7 +218,7 @@ export default function Home() {
             {featured.map((item) => (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden ${item.soldOut ? 'opacity-80' : ''}`}
+                className={`surface-3d surface-3d-hover rounded-2xl overflow-hidden ${item.soldOut ? 'opacity-80' : ''}`}
               >
                 <div className="bg-gradient-to-br from-gray-100 to-gray-50 h-14 sm:h-16 border-b border-gray-100 relative">
                   {item.soldOut && (
@@ -245,7 +247,7 @@ export default function Home() {
                       onClick={() => handleAdd(item)}
                       className={`text-white w-9 h-9 sm:w-7 sm:h-7 rounded-full flex items-center justify-center font-bold text-sm transition-colors shrink-0 touch-manipulation ${
                         orderingOpen && !item.soldOut
-                          ? 'bg-red-600 hover:bg-red-700 cursor-pointer active:scale-95'
+                          ? 'button-3d-red cursor-pointer active:scale-95'
                           : 'bg-gray-300 cursor-not-allowed'
                       }`}
                     >
@@ -259,7 +261,7 @@ export default function Home() {
           <div className="text-center mt-8">
             <Link
               to="/menu"
-              className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-xl transition-colors"
+              className="button-3d-red inline-flex items-center gap-2 text-white font-bold px-8 py-3 rounded-xl"
             >
               Δείτε όλο το Μενού
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,7 +314,7 @@ export default function Home() {
               desc: 'Εμπειρία και αγάπη για τη γεύση',
             },
           ].map((item) => (
-            <div key={item.title} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div key={item.title} className="surface-3d surface-3d-hover rounded-2xl p-5 text-center">
               <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                 {item.icon}
               </div>

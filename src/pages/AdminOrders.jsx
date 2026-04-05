@@ -370,7 +370,7 @@ export default function AdminOrders({ onLogout }) {
   }, [checkDailyReset])
 
   useEffect(() => {
-    syncOrdersFromPersistedStorage()
+    void syncOrdersFromPersistedStorage()
     return subscribeOrdersRemote(syncOrdersFromPersistedStorage)
   }, [])
 

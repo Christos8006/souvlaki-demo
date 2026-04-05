@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { menuData } from '../utils/menuCatalog'
 import useShopSettingsStore from '../store/shopSettingsStore'
 import { isOwnerAuthenticated, ownerLogin, ownerLogout } from '../utils/ownerAuth'
+import OwnerSiteStats from '../components/OwnerSiteStats'
 
 function round2(n) {
   return Math.round(Number(n) * 100) / 100
@@ -206,23 +207,30 @@ export default function AdminMenuProducts() {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 pb-4 border-b border-slate-200">
-        <p className="text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 font-medium leading-relaxed flex-1">
-          <strong className="font-black">Περιοχή ιδιοκτήτη.</strong> Μετά τη δουλειά, πατήστε κλείδωμα ώστε οι
-          υπάλληλοι να μην αλλάζουν κατά λάθος τιμές.
-        </p>
-        <button
-          type="button"
-          onClick={handleLockOwnerSection}
-          className="shrink-0 min-h-11 px-4 py-2.5 rounded-xl border-2 border-slate-700 bg-slate-800 text-white text-sm font-black hover:bg-slate-700 cursor-pointer touch-manipulation w-full sm:w-auto"
-        >
-          Κλείδωμα (υπάλληλοι)
-        </button>
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4 pb-4 border-b border-slate-200">
+        <div className="flex-1 space-y-3">
+          <p className="text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 font-medium leading-relaxed">
+            <strong className="font-black">Περιοχή ιδιοκτήτη.</strong> Μετά τη δουλειά, πατήστε κλείδωμα ώστε οι
+            υπάλληλοι να μην αλλάζουν κατά λάθος τιμές.
+          </p>
+          <p className="text-sm text-slate-600">
+            Οι αλλαγές εμφανίζονται σε όλες τις συσκευές μέσω Supabase. Τα στατιστικά δεξιά τραβιούνται επίσης από
+            Supabase και τα βλέπει μόνο όποιος ξεκλειδώσει με τον κωδικό ιδιοκτήτη.
+          </p>
+        </div>
+        <div className="w-full lg:w-auto lg:min-w-[22rem] space-y-3">
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleLockOwnerSection}
+              className="shrink-0 min-h-11 px-4 py-2.5 rounded-xl border-2 border-slate-700 bg-slate-800 text-white text-sm font-black hover:bg-slate-700 cursor-pointer touch-manipulation w-full sm:w-auto"
+            >
+              Κλείδωμα (υπάλληλοι)
+            </button>
+          </div>
+          <OwnerSiteStats />
+        </div>
       </div>
-      <p className="text-sm text-slate-600 mb-3">
-        Οι αλλαγές εμφανίζονται αμέσως στο κανονικό site (ίδιο browser / άλλες καρτέλες). Οι τιμές
-        αποθηκεύονται τοπικά στον browser — για παραγωγή χρειάζεται backend.
-      </p>
       <input
         type="search"
         value={query}

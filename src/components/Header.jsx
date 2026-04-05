@@ -10,11 +10,11 @@ export default function Header() {
   const isMenu = location.pathname === '/menu'
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="glass-3d border-b border-white/70">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 min-h-14 sm:h-16 flex items-center justify-between gap-2">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="bg-red-600 text-white font-black text-xl px-3 py-1 rounded-lg tracking-tight">
+          <div className="button-3d-red text-white font-black text-xl px-3 py-1 rounded-lg tracking-tight">
             ΓΥΡΟΣ
           </div>
           <span className="font-bold text-gray-800 text-lg hidden sm:block">
@@ -45,7 +45,7 @@ export default function Header() {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="relative flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2.5 sm:py-2 rounded-xl font-semibold text-sm transition-colors cursor-pointer touch-manipulation min-h-11 sm:min-h-0"
+          className="button-3d-red relative flex items-center gap-2 text-white px-3 sm:px-4 py-2.5 sm:py-2 rounded-xl font-semibold text-sm cursor-pointer touch-manipulation min-h-11 sm:min-h-0"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -60,7 +60,7 @@ export default function Header() {
       </div>
 
       {/* Mobile nav */}
-      <div className="md:hidden border-t border-gray-100 bg-white px-4 py-2 flex gap-4 text-sm font-medium text-gray-600">
+      <div className="md:hidden border-t border-white/70 bg-white/80 px-4 py-2 flex gap-4 text-sm font-medium text-gray-600">
         <Link to="/" className={`hover:text-red-600 ${location.pathname === '/' ? 'text-red-600' : ''}`}>
           Αρχική
         </Link>

@@ -7,12 +7,15 @@ export default function Footer() {
   const orderingOpen = useShopSettingsStore((s) => s.orderingOpen)
 
   return (
-    <footer id="contact" className="bg-gray-900 text-gray-300 mt-16">
+    <footer
+      id="contact"
+      className="mt-16 text-gray-300 bg-[linear-gradient(180deg,#111827_0%,#0f172a_100%)] shadow-[0_-20px_50px_rgba(15,23,42,0.22),inset_0_1px_0_rgba(255,255,255,0.04)]"
+    >
       <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="bg-red-600 text-white font-black text-xl px-3 py-1 rounded-lg">
+            <div className="button-3d-red text-white font-black text-xl px-3 py-1 rounded-lg">
               ΓΥΡΟΣ
             </div>
             <span className="text-white font-bold text-lg">Σπίτι</span>
