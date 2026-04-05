@@ -32,10 +32,18 @@ export default function OwnerSiteStats() {
     }
 
     load()
-    const timer = window.setInterval(load, 15000)
+    const timer = window.setInterval(load, 4000)
+    const onFocus = () => load()
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') load()
+    }
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onVisible)
     return () => {
       alive = false
       window.clearInterval(timer)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onVisible)
     }
   }, [])
 
@@ -65,7 +73,7 @@ export default function OwnerSiteStats() {
         <StatBox label="Σύνολο επισκεπτών" value={status === 'loading' ? '...' : stats.totalVisitors} accent="text-slate-900" />
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Εμφανίζονται μόνο στο section ιδιοκτήτη. Ανανεώνονται αυτόματα κάθε λίγα δευτερόλεπτα.
+        Εμφανίζονται μόνο στο section ιδιοκτήτη. Ανανεώνονται γρήγορα και ξαναφορτώνουν άμεσα όταν επιστρέφετε στο tab.
       </p>
     </div>
   )

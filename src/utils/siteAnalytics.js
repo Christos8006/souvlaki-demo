@@ -1,7 +1,7 @@
 import { getSupabaseClient, hasSupabase } from './supabaseClient'
 
 const VISITOR_ID_KEY = 'souvlaki-visitor-id'
-const HEARTBEAT_MS = 25000
+const HEARTBEAT_MS = 12000
 
 function makeVisitorId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
