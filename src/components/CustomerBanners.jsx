@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
-import { subscribeAdminPresence, readAdminOnline } from '../utils/adminPresence'
+import { useEffect, useState } from 'react'
 import {
   isStoreOpenNow,
   minutesUntilClosing,
@@ -8,18 +7,9 @@ import useOrdersStore from '../store/ordersStore'
 import useShopSettingsStore from '../store/shopSettingsStore'
 
 export default function CustomerBanners() {
-  const [adminOnline, setAdminOnline] = useState(() => readAdminOnline())
   const [closingSoon, setClosingSoon] = useState(false)
   const checkDailyReset = useOrdersStore((s) => s.checkDailyReset)
   const orderingOpen = useShopSettingsStore((s) => s.orderingOpen)
-
-  const refreshOnline = useCallback(() => {
-    setAdminOnline(readAdminOnline())
-  }, [])
-
-  useEffect(() => {
-    return subscribeAdminPresence(refreshOnline)
-  }, [refreshOnline])
 
   useEffect(() => {
     function tick() {
@@ -55,17 +45,13 @@ export default function CustomerBanners() {
         className={`px-3 py-2 text-center text-sm font-bold transition-colors ${
           !orderingOpen
             ? 'bg-slate-700 text-slate-200'
-            : adminOnline
-              ? 'bg-green-600 text-white'
-              : 'bg-slate-600 text-slate-100'
+            : 'bg-green-600 text-white'
         }`}
       >
         {!orderingOpen ? (
           <span>Online παραγγελίες κλειστές — μόνο ενημέρωση καταστήματος</span>
-        ) : adminOnline ? (
-          <span>Κατάστημα online — δεχόμαστε παραγγελίες τώρα</span>
         ) : (
-          <span>Κατάστημα offline — οι παραγγελίες ενδέχεται να καθυστερήσουν</span>
+          <span>Κατάστημα online — δεχόμαστε παραγγελίες τώρα</span>
         )}
       </div>
 
