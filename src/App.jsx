@@ -15,6 +15,7 @@ import Menu from './pages/Menu'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
 import AdminGate from './pages/AdminGate'
+import PaymentGateway from './pages/PaymentGateway'
 
 function AppShell() {
   const { pathname } = useLocation()
@@ -56,6 +57,7 @@ function AppShell() {
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<PaymentGateway />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/admin" element={<AdminGate />} />
         </Routes>

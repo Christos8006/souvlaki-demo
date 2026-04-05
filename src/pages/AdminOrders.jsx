@@ -15,6 +15,7 @@ import {
 import AdminMenuProducts from './AdminMenuProducts'
 import OrderLineCustomization from '../components/OrderLineCustomization'
 import { ADMIN_BRAND_LABEL } from '../config/branding'
+import { getPaymentMethodLabel } from '../utils/paymentOptions'
 
 const ETA_RANGES = [
   { key: '20-35', label: '20 – 35 λεπτά' },
@@ -669,10 +670,13 @@ export default function AdminOrders({ onLogout }) {
                       </ul>
                       <p className="text-xs text-slate-500 mt-2">
                         Πληρωμή:{' '}
-                        {order.customer.payment === 'card' ? 'Κάρτα στην παράδοση' : 'Μετρητά'}
+                        {order.customer.paymentLabel || getPaymentMethodLabel(order.customer.payment)}
                       </p>
                       {order.coupon?.code && (
-                        <p className="text-xs text-green-700 mt-1">Κουπόνι: {order.coupon.code}</p>
+                        <p className="text-xs text-green-700 mt-1">
+                          Κουπόνι: {order.coupon.code}
+                          {order.coupon.selectedDrink ? ` · Αναψυκτικό: ${order.coupon.selectedDrink}` : ''}
+                        </p>
                       )}
                     </div>
                   </div>

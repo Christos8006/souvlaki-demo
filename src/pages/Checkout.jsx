@@ -4,6 +4,12 @@ import useCartStore from '../store/cartStore'
 import useOrdersStore from '../store/ordersStore'
 import useShopSettingsStore from '../store/shopSettingsStore'
 import OrderLineCustomization from '../components/OrderLineCustomization'
+import {
+  PAYMENT_OPTIONS,
+  getPaymentMethodLabel,
+  isOnlinePaymentMethod,
+} from '../utils/paymentOptions'
+import { menuData } from '../utils/menuCatalog'
 
 const stores = [
   'Ασκληπιού 27 — Πλατεία Ταχυδρομείου',
@@ -33,12 +39,14 @@ export default function Checkout() {
   const setOrderType = useCartStore((s) => s.setOrderType)
   const coupon = useCartStore((s) => s.coupon)
   const applyCoupon = useCartStore((s) => s.applyCoupon)
+  const setCouponDrink = useCartStore((s) => s.setCouponDrink)
   const removeCoupon = useCartStore((s) => s.removeCoupon)
   const addOrder = useOrdersStore((s) => s.addOrder)
   const orderingOpen = useShopSettingsStore((s) => s.orderingOpen)
 
   const [form, setForm] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     address: '',
@@ -50,6 +58,10 @@ export default function Checkout() {
   })
   const [errors, setErrors] = useState({})
   const [couponMsg, setCouponMsg] = useState('')
+
+  const couponDrinkOptions = (menuData.find((c) => c.id === 'anapsyktika')?.items || []).filter(
+    (item) => !/(Amstel|Heineken|Fix|Νερό)/i.test(item.name)
+  )
 
   const subtotal = items.reduce((sum, i) => sum + i.onlinePrice * i.qty, 0)
   const couponDiscount = coupon.applied && subtotal >= 20 ? coupon.value : 0
@@ -63,12 +75,17 @@ export default function Checkout() {
 
   function validate() {
     const e = {}
-    if (!form.name.trim()) e.name = 'Υποχρεωτικό πεδίο'
+    if (!form.firstName.trim()) e.firstName = 'Υποχρεωτικό πεδίο'
+    if (!form.lastName.trim()) e.lastName = 'Υποχρεωτικό πεδίο'
     if (!form.email.trim()) e.email = 'Υποχρεωτικό πεδίο'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Μη έγκυρη διεύθυνση email'
-    if (!form.phone.trim()) e.phone = 'Υποχρεωτικό πεδίο'
-    else if (!/^[\d\s+\-()]{10,}$/.test(form.phone)) e.phone = 'Μη έγκυρο τηλέφωνο'
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email.trim())) e.email = 'Μη έγκυρη διεύθυνση email'
+    const phoneDigits = form.phone.replace(/\D/g, '')
+    if (!phoneDigits) e.phone = 'Υποχρεωτικό πεδίο'
+    else if (!/^69\d{8}$/.test(phoneDigits)) e.phone = 'Βάλτε έγκυρο κινητό 69XXXXXXXX'
     if (orderType === 'delivery' && !form.address.trim()) e.address = 'Υποχρεωτικό πεδίο'
+    if (coupon.applied && coupon.code === 'DRINK20' && subtotal >= 20 && !coupon.selectedDrink) {
+      e.couponDrink = 'Διαλέξτε αναψυκτικό για το κουπόνι'
+    }
     return e
   }
 
@@ -93,6 +110,7 @@ export default function Checkout() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
+    const customerName = `${form.firstName.trim()} ${form.lastName.trim()}`.trim()
     const lineItems = items.map((i) => ({
       id: i.id,
       lineId: i.lineId,
@@ -108,13 +126,16 @@ export default function Checkout() {
       const created = await addOrder({
         orderType,
         customer: {
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
+          name: customerName,
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: form.phone.replace(/\D/g, ''),
           address: form.address.trim(),
           floor: form.floor.trim(),
           store: form.store,
           payment: form.payment,
+          paymentLabel: getPaymentMethodLabel(form.payment),
           notes: form.notes.trim(),
         },
         items: lineItems,
@@ -123,7 +144,7 @@ export default function Checkout() {
         deliveryCost,
         total: finalTotal,
         coupon: coupon.applied
-          ? { code: coupon.code, description: coupon.description }
+          ? { code: coupon.code, description: coupon.description, selectedDrink: coupon.selectedDrink || '' }
           : null,
       })
       orderId = created.id
@@ -135,13 +156,31 @@ export default function Checkout() {
     }
 
     clearCart()
+    if (isOnlinePaymentMethod(form.payment)) {
+      navigate('/payment', {
+        state: {
+          paymentMethod: form.payment,
+          order: {
+            id: orderId,
+            displayCode,
+            orderType,
+            total: finalTotal,
+            customer: {
+              name: customerName,
+              email: form.email.trim().toLowerCase(),
+            },
+          },
+        },
+      })
+      return
+    }
     navigate('/order-success', {
       state: {
         orderId,
         displayCode,
         orderType,
-        name: form.name,
-        email: form.email,
+        name: customerName,
+        email: form.email.trim().toLowerCase(),
         estimatedTime: orderType === 'delivery' ? '30–45 λεπτά' : '15 λεπτά',
         total: finalTotal,
       },
@@ -237,37 +276,51 @@ export default function Checkout() {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Όνομα" required error={errors.name}>
+              <Field label="Όνομα" required error={errors.firstName}>
                 <input
                   type="text"
-                  value={form.name}
-                  onChange={(e) => set('name', e.target.value)}
+                  value={form.firstName}
+                  onChange={(e) => set('firstName', e.target.value)}
                   placeholder="Το όνομά σας"
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.name ? 'border-red-400' : 'border-gray-200'}`}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.firstName ? 'border-red-400' : 'border-gray-200'}`}
                 />
               </Field>
 
-              <Field label="Τηλέφωνο" required error={errors.phone}>
+              <Field label="Επώνυμο" required error={errors.lastName}>
                 <input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => set('phone', e.target.value)}
-                  placeholder="69XXXXXXXX"
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.phone ? 'border-red-400' : 'border-gray-200'}`}
+                  type="text"
+                  value={form.lastName}
+                  onChange={(e) => set('lastName', e.target.value)}
+                  placeholder="Το επώνυμό σας"
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.lastName ? 'border-red-400' : 'border-gray-200'}`}
                 />
               </Field>
             </div>
 
-            <Field label="Email" required error={errors.email}>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => set('email', e.target.value)}
-                placeholder="example@email.com"
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.email ? 'border-red-400' : 'border-gray-200'}`}
-              />
-              <p className="text-xs text-gray-400 mt-1">Θα σας στείλουμε την απόδειξη της παραγγελίας στο email σας</p>
-            </Field>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Τηλέφωνο" required error={errors.phone}>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => set('phone', e.target.value.replace(/[^\d]/g, '').slice(0, 10))}
+                  placeholder="69XXXXXXXX"
+                  inputMode="numeric"
+                  maxLength={10}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.phone ? 'border-red-400' : 'border-gray-200'}`}
+                />
+              </Field>
+
+              <Field label="Email" required error={errors.email}>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => set('email', e.target.value.trimStart())}
+                  placeholder="example@email.com"
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 transition-colors ${errors.email ? 'border-red-400' : 'border-gray-200'}`}
+                />
+                <p className="text-xs text-gray-400 mt-1">Θα σας στείλουμε την απόδειξη της παραγγελίας στο email σας</p>
+              </Field>
+            </div>
 
             {orderType === 'delivery' ? (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -307,25 +360,28 @@ export default function Checkout() {
             {/* Payment */}
             <div>
               <p className="text-sm font-semibold text-gray-700 mb-2">Τρόπος Πληρωμής</p>
-              <div className="flex gap-3">
-                {[
-                  { id: 'cash', label: 'Μετρητά' },
-                  { id: 'card', label: 'Κάρτα στην παράδοση' },
-                ].map((opt) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {PAYMENT_OPTIONS.map((opt) => (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => set('payment', opt.id)}
-                    className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-colors cursor-pointer ${
+                    className={`text-left px-4 py-3 rounded-xl border-2 text-sm transition-colors cursor-pointer ${
                       form.payment === opt.id
                         ? 'border-red-600 bg-red-50 text-red-600'
                         : 'border-gray-200 text-gray-600 hover:border-gray-300'
                     }`}
                   >
-                    {opt.label}
+                    <p className="font-bold">{opt.label}</p>
+                    <p className="text-xs mt-1 opacity-80">{opt.description}</p>
                   </button>
                 ))}
               </div>
+              {isOnlinePaymentMethod(form.payment) && (
+                <p className="text-xs text-gray-500 mt-2">
+                  Με την υποβολή θα μεταβείτε στη σελίδα online πληρωμής του επιλεγμένου τρόπου.
+                </p>
+              )}
             </div>
 
             {/* Coupon */}
@@ -353,14 +409,36 @@ export default function Checkout() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-                <div>
+              <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
                   <p className="text-sm font-bold text-green-700">Κουπόνι εφαρμόστηκε: {coupon.code}</p>
                   <p className="text-xs text-green-600">{coupon.description}</p>
+                    {coupon.selectedDrink && (
+                      <p className="text-xs text-green-700 mt-1">Επιλογή: {coupon.selectedDrink}</p>
+                    )}
+                  </div>
+                  <button type="button" onClick={removeCoupon} className="text-xs text-red-500 font-semibold cursor-pointer hover:text-red-700">
+                    Αφαίρεση
+                  </button>
                 </div>
-                <button type="button" onClick={removeCoupon} className="text-xs text-red-500 font-semibold cursor-pointer hover:text-red-700">
-                  Αφαίρεση
-                </button>
+                {coupon.code === 'DRINK20' && subtotal >= 20 && (
+                  <Field label="Διάλεξε αναψυκτικό για το κουπόνι" required error={errors.couponDrink}>
+                    <select
+                      value={coupon.selectedDrink || ''}
+                      onChange={(e) => {
+                        setCouponDrink(e.target.value)
+                        setErrors((prev) => ({ ...prev, couponDrink: '' }))
+                      }}
+                      className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-400 bg-white ${errors.couponDrink ? 'border-red-400' : 'border-green-200'}`}
+                    >
+                      <option value="">Επίλεξε αναψυκτικό</option>
+                      {couponDrinkOptions.map((drink) => (
+                        <option key={drink.id} value={drink.name}>{drink.name}</option>
+                      ))}
+                    </select>
+                  </Field>
+                )}
               </div>
             )}
 

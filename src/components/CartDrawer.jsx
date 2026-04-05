@@ -131,6 +131,9 @@ export default function CartDrawer() {
                     ? <p className="text-xs text-green-600">Έκπτωση -{coupon.value.toFixed(2)}€</p>
                     : <p className="text-xs text-orange-600">Απαιτείται παραγγελία 20€+</p>
                   }
+                  {coupon.selectedDrink && (
+                    <p className="text-xs text-green-700">Αναψυκτικό: {coupon.selectedDrink}</p>
+                  )}
                 </div>
                 <button onClick={removeCoupon} className="text-xs text-red-500 hover:text-red-700 font-semibold cursor-pointer">
                   Αφαίρεση

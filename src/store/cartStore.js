@@ -16,7 +16,7 @@ const useCartStore = create(
       items: [],
       isDrawerOpen: false,
       orderType: 'delivery',
-      coupon: { code: null, applied: false, value: 0, description: '' },
+      coupon: { code: null, applied: false, value: 0, description: '', selectedDrink: '' },
 
       /**
        * @param {object} product
@@ -78,7 +78,7 @@ const useCartStore = create(
       clearCart: () =>
         set({
           items: [],
-          coupon: { code: null, applied: false, value: 0, description: '' },
+          coupon: { code: null, applied: false, value: 0, description: '', selectedDrink: '' },
         }),
 
       setDrawerOpen: (open) => set({ isDrawerOpen: open }),
@@ -94,6 +94,7 @@ const useCartStore = create(
               applied: true,
               value: match.value,
               description: match.description,
+              selectedDrink: '',
             },
           })
         } else {
@@ -101,9 +102,14 @@ const useCartStore = create(
         }
       },
 
+      setCouponDrink: (drink) =>
+        set((s) => ({
+          coupon: { ...s.coupon, selectedDrink: String(drink || '') },
+        })),
+
       removeCoupon: () =>
         set({
-          coupon: { code: null, applied: false, value: 0, description: '' },
+          coupon: { code: null, applied: false, value: 0, description: '', selectedDrink: '' },
         }),
     }),
     {
