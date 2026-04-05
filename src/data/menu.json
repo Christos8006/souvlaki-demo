@@ -1,0 +1,137 @@
+[
+  {
+    "id": "prosfores",
+    "label": "Προσφορές",
+    "icon": "🔥",
+    "items": [
+      { "id": 1, "name": "3 Πίτες Γύρο + 1 Αναψυκτικό", "description": "Τρεις πίτες με λαχταριστό γύρο χοιρινό ή κοτόπουλο & 1 αναψυκτικό 330ml", "price": 14.70, "onlinePrice": 13.20, "tag": "Bestseller" },
+      { "id": 2, "name": "10 Σουβλάκια Χοιρινά + Πατάτες + Cola", "description": "Δέκα σουβλάκια χοιρινά, μια μερίδα πατάτες τηγανητές & Coca-Cola 500ml", "price": 23.30, "onlinePrice": 21.00, "tag": "Οικογένεια" },
+      { "id": 3, "name": "Club Sandwich + Αναψυκτικό", "description": "Club sandwich με τηγανητό φιλέτο κοτόπουλο & 1 αναψυκτικό 330ml", "price": 7.90, "onlinePrice": 7.10, "tag": "" },
+      { "id": 4, "name": "Μερίδα Γύρος + Caesar's + Αναψυκτικό", "description": "Μερίδα γύρου της επιλογής σας, Caesar's σαλάτα & αναψυκτικό 330ml", "price": 17.70, "onlinePrice": 15.90, "tag": "" },
+      { "id": 5, "name": "Σκεπαστή Γύρος + Αναψυκτικό", "description": "Σκεπαστή με γύρο κοτόπουλο ή χοιρινό & 1 αναψυκτικό 330ml", "price": 8.70, "onlinePrice": 7.80, "tag": "" },
+      { "id": 6, "name": "Τα Πάντα Όλα Κοτόπουλο + Πατάτες", "description": "Ολοκληρωμένο γεύμα κοτόπουλου με 1 μερίδα πατάτες τηγανητές", "price": 19.80, "onlinePrice": 17.80, "tag": "Must try" }
+    ]
+  },
+  {
+    "id": "pites",
+    "label": "Πίτες & Σάντουιτς",
+    "icon": "🥙",
+    "items": [
+      { "id": 10, "name": "Γύρος Χοιρινός σε Πίτα", "description": "Γύρος χοιρινός με τομάτα, κρεμμύδι, τζατζίκι & πατάτες", "price": 3.40, "onlinePrice": 3.06, "tag": "", "optionsPreset": "pitaGyrosPork" },
+      { "id": 11, "name": "Γύρος Κοτόπουλο σε Πίτα", "description": "Γύρος κοτόπουλο με τομάτα, κρεμμύδι, σως & πατάτες", "price": 3.40, "onlinePrice": 3.06, "tag": "", "optionsPreset": "pitaGyrosChicken" },
+      { "id": 12, "name": "Σουβλάκι Χοιρινό σε Πίτα", "description": "Σουβλάκι χοιρινό με τομάτα, κρεμμύδι & πατάτες", "price": 3.20, "onlinePrice": 2.88, "tag": "", "optionsPreset": "pitaSouvlaki" },
+      { "id": 13, "name": "Σουβλάκι Κοτόπουλο σε Πίτα", "description": "Σουβλάκι κοτόπουλο με τομάτα, κρεμμύδι & πατάτες", "price": 3.20, "onlinePrice": 2.88, "tag": "", "optionsPreset": "pitaSouvlaki" },
+      { "id": 14, "name": "Μπριζολάκι σε Πίτα", "description": "Χοιρινό μπριζολάκι με τομάτα, κρεμμύδι, μουστάρδα & πατάτες", "price": 3.40, "onlinePrice": 3.06, "tag": "", "optionsPreset": "pitaMustard" },
+      { "id": 15, "name": "Μπιφτέκι σε Πίτα", "description": "Χειροποίητο μπιφτέκι με τομάτα, κρεμμύδι & πατάτες", "price": 3.40, "onlinePrice": 3.06, "tag": "", "optionsPreset": "pitaSouvlaki" },
+      { "id": 16, "name": "Κοτομπέικον σε Πίτα", "description": "Φιλέτο κοτόπουλο με μπέικον, τομάτα & σως", "price": 3.60, "onlinePrice": 3.24, "tag": "", "optionsPreset": "pitaKotobekon" },
+      { "id": 17, "name": "Γυρόνι", "description": "Μικρή πίτα γύρου — ιδανικό για παιδιά ή ελαφρύ σνακ", "price": 3.40, "onlinePrice": 3.06, "tag": "", "optionsPreset": "pitaGyrosPork" },
+      { "id": 18, "name": "Πατατόπιτα", "description": "Πίτα γεμιστή με τηγανητές πατάτες & σως", "price": 2.40, "onlinePrice": 2.16, "tag": "", "optionsPreset": "patatopita" },
+      { "id": 19, "name": "Λουκάνικο σε Πίτα", "description": "Λουκάνικο χοιρινό με μουστάρδα & κέτσαπ", "price": 3.00, "onlinePrice": 2.70, "tag": "", "optionsPreset": "pitaLoukaniko" }
+    ]
+  },
+  {
+    "id": "sexy",
+    "label": "Sexy Πίτες",
+    "icon": "⭐",
+    "items": [
+      { "id": 20, "name": "Sexy Γύρος Κοτόπουλο", "description": "Μεγάλη πίτα γύρου κοτόπουλου με extra υλικά & σπέσιαλ σως", "price": 4.70, "onlinePrice": 4.23, "tag": "Popular", "optionsPreset": "sexyPita" },
+      { "id": 21, "name": "Sexy Γύρος Χοιρινός", "description": "Μεγάλη πίτα γύρου χοιρινού με extra υλικά & σπέσιαλ σως", "price": 4.70, "onlinePrice": 4.23, "tag": "", "optionsPreset": "sexyPita" },
+      { "id": 22, "name": "Sexy Μπριζολάκι", "description": "Μεγάλη πίτα με χοιρινό μπριζολάκι & σπέσιαλ υλικά", "price": 4.70, "onlinePrice": 4.23, "tag": "", "optionsPreset": "sexyPita" },
+      { "id": 23, "name": "Sexy Φιλέτο Κοτόπουλο", "description": "Μεγάλη πίτα με φιλέτο κοτόπουλο & σπέσιαλ σως", "price": 4.70, "onlinePrice": 4.23, "tag": "", "optionsPreset": "sexyPita" }
+    ]
+  },
+  {
+    "id": "burgers",
+    "label": "Burgers",
+    "icon": "🍔",
+    "items": [
+      { "id": 30, "name": "Golden Burger Χοιρινό & Μοσχάρι", "description": "Golden burger με τυρί gouda, μπέικον, παρμεζάνα, μαρούλι, ντομάτα & κέτσαπ", "price": 5.60, "onlinePrice": 5.04, "tag": "Bestseller", "optionsPreset": "burgerLoaded" },
+      { "id": 31, "name": "Golden Burger Κοτόπουλο", "description": "Golden burger με φιλέτο κοτόπουλο, τυρί gouda, μπέικον & παρμεζάνα", "price": 5.60, "onlinePrice": 5.04, "tag": "", "optionsPreset": "burgerLoaded" },
+      { "id": 32, "name": "Special Burger", "description": "Special burger χειροποίητος με ντομάτα, μαρούλι, τυρί & special σως", "price": 5.60, "onlinePrice": 5.04, "tag": "", "optionsPreset": "burgerLoaded" },
+      { "id": 33, "name": "Burger με Φιλέτο Κοτόπουλο", "description": "Τραγανό φιλέτο κοτόπουλο, μαρούλι, ντομάτα & μαγιονέζα", "price": 5.60, "onlinePrice": 5.04, "tag": "", "optionsPreset": "burgerLoaded" },
+      { "id": 34, "name": "Cheeseburger", "description": "Κλασικό cheeseburger με τυρί cheddar, ντομάτα, κρεμμύδι & κέτσαπ", "price": 4.30, "onlinePrice": 3.87, "tag": "", "optionsPreset": "burgerClassic" },
+      { "id": 35, "name": "Hamburger", "description": "Απλό hamburger με ντομάτα, κρεμμύδι, μαρούλι & μουστάρδα", "price": 4.10, "onlinePrice": 3.69, "tag": "", "optionsPreset": "burgerClassic" },
+      { "id": 36, "name": "Hot Dog XL", "description": "XL hot dog με λουκάνικο, μουστάρδα & κέτσαπ", "price": 3.30, "onlinePrice": 2.97, "tag": "", "optionsPreset": "hotDog" }
+    ]
+  },
+  {
+    "id": "skepastes",
+    "label": "Σκεπαστές",
+    "icon": "🥗",
+    "items": [
+      { "id": 40, "name": "Σκεπαστή Γύρος Κοτόπουλο", "description": "Γύρος κοτόπουλο σε σκεπαστή φόρμα με πατάτες & σως", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "skepasti" },
+      { "id": 41, "name": "Σκεπαστή Γύρος Χοιρινός", "description": "Γύρος χοιρινός σε σκεπαστή φόρμα με πατάτες & σως", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "skepasti" },
+      { "id": 42, "name": "Σκεπαστή Μπιφτέκι", "description": "Χειροποίητο μπιφτέκι σε σκεπαστή φόρμα με πατάτες", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "skepasti" },
+      { "id": 43, "name": "Σκεπαστή Σουβλάκι Χοιρινό", "description": "Σουβλάκι χοιρινό σε σκεπαστή φόρμα με πατάτες & σως", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "skepasti" },
+      { "id": 44, "name": "XL Σκεπαστή Γύρος Κοτόπουλο", "description": "Extra μεγάλη σκεπαστή με γύρο κοτόπουλο", "price": 8.20, "onlinePrice": 7.38, "tag": "XL", "optionsPreset": "skepasti" },
+      { "id": 45, "name": "XL Σκεπαστή Γύρος Χοιρινός", "description": "Extra μεγάλη σκεπαστή με γύρο χοιρινό", "price": 8.20, "onlinePrice": 7.38, "tag": "XL", "optionsPreset": "skepasti" }
+    ]
+  },
+  {
+    "id": "merides",
+    "label": "Μερίδες",
+    "icon": "🍽️",
+    "items": [
+      { "id": 50, "name": "Γύρος Κοτόπουλο Μερίδα", "description": "Μερίδα γύρου κοτόπουλου με πατάτες τηγανητές & πίτα", "price": 9.50, "onlinePrice": 8.55, "tag": "", "optionsPreset": "meridaGyros" },
+      { "id": 51, "name": "Γύρος Χοιρινός Μερίδα", "description": "Μερίδα γύρου χοιρινού με πατάτες τηγανητές & πίτα", "price": 9.50, "onlinePrice": 8.55, "tag": "", "optionsPreset": "meridaGyros" },
+      { "id": 52, "name": "Mixed Grill", "description": "Συνδυασμός σουβλακιών, μπριζολάκι & μπιφτέκι με πατάτες", "price": 10.40, "onlinePrice": 9.36, "tag": "Must try", "optionsPreset": "meridaGrill" },
+      { "id": 53, "name": "Κοτομπουκιές Μερίδα", "description": "Τραγανές κοτομπουκιές με σως βουτήματος", "price": 7.50, "onlinePrice": 6.75, "tag": "", "optionsPreset": "meridaFried" },
+      { "id": 54, "name": "Chicken Strips Μερίδα", "description": "Τραγανά chicken strips με σως της επιλογής σας", "price": 7.50, "onlinePrice": 6.75, "tag": "", "optionsPreset": "meridaFried" },
+      { "id": 55, "name": "Πιατέλα", "description": "Μεγάλη πιατέλα με ποικιλία κρεάτων — ιδανική για δύο άτομα", "price": 18.00, "onlinePrice": 16.20, "tag": "Για 2", "optionsPreset": "meridaPlate" }
+    ]
+  },
+  {
+    "id": "salates",
+    "label": "Σαλάτες",
+    "icon": "🥗",
+    "items": [
+      { "id": 60, "name": "Caesar's", "description": "Μαρούλι, φιλέτο κοτόπουλο, μπέικον, καλαμπόκι, παρμεζάνα & Caesar dressing", "price": 6.90, "onlinePrice": 6.21, "tag": "Popular", "optionsPreset": "saladExtras" },
+      { "id": 61, "name": "Χωριάτικη", "description": "Ντομάτα, αγγούρι, ελιές, φέτα, κρεμμύδι & ελαιόλαδο", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "saladExtras" },
+      { "id": 62, "name": "Γυροσαλάτα Κοτόπουλο", "description": "Φρέσκα λαχανικά με γύρο κοτόπουλο & σπέσιαλ σως", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "saladExtras" },
+      { "id": 63, "name": "Γυροσαλάτα Χοιρινό", "description": "Φρέσκα λαχανικά με γύρο χοιρινό & σπέσιαλ σως", "price": 6.90, "onlinePrice": 6.21, "tag": "", "optionsPreset": "saladExtras" },
+      { "id": 64, "name": "Τονοσαλάτα", "description": "Τόνος, ντομάτα, αγγούρι, καπαρόσκολα & λεμόνι", "price": 7.20, "onlinePrice": 6.48, "tag": "", "optionsPreset": "saladExtras" },
+      { "id": 65, "name": "Healthy", "description": "Μαρούλι, ρόκα, αβοκάντο, ντομάτα cherry & ελαιόλαδο", "price": 7.20, "onlinePrice": 6.48, "tag": "Vegan", "optionsPreset": "saladExtras" },
+      { "id": 66, "name": "Αγγουροντομάτα", "description": "Απλή σαλάτα αγγούρι & ντομάτα με ελαιόλαδο", "price": 4.60, "onlinePrice": 4.14, "tag": "", "optionsPreset": "saladExtras" }
+    ]
+  },
+  {
+    "id": "synodevtika",
+    "label": "Συνοδευτικά",
+    "icon": "🍟",
+    "items": [
+      { "id": 70, "name": "Πατάτες Τηγανητές", "description": "Τραγανές πατάτες τηγανητές", "price": 3.40, "onlinePrice": 3.06, "tag": "" },
+      { "id": 71, "name": "Πατάτες με Παρμεζάνα", "description": "Τραγανές πατάτες τηγανητές με τριμμένη παρμεζάνα", "price": 4.30, "onlinePrice": 3.87, "tag": "Popular" },
+      { "id": 72, "name": "Πατάτες με Σως & Μπέικον", "description": "Πατάτες τηγανητές με σως & τριγωνάκια μπέικον", "price": 4.90, "onlinePrice": 4.41, "tag": "" },
+      { "id": 73, "name": "Φέτα", "description": "Φέτα ΠΟΠ με ελαιόλαδο & ρίγανη", "price": 3.50, "onlinePrice": 3.15, "tag": "" },
+      { "id": 74, "name": "Τζατζίκι", "description": "Σπιτικό τζατζίκι με αγγούρι & σκόρδο", "price": 2.50, "onlinePrice": 2.25, "tag": "" },
+      { "id": 75, "name": "Σως To Eat", "description": "Η διάσημη κίτρινη σως του καταστήματος", "price": 1.50, "onlinePrice": 1.35, "tag": "Signature" }
+    ]
+  },
+  {
+    "id": "glyka",
+    "label": "Γλυκά",
+    "icon": "🍰",
+    "items": [
+      { "id": 80, "name": "Cheesecake", "description": "Κρεμώδες cheesecake με σως φράουλα", "price": 3.40, "onlinePrice": 3.06, "tag": "" },
+      { "id": 81, "name": "Banoffee", "description": "Μπανάνα, καραμέλα & σαντιγί σε μπισκοτένια βάση", "price": 3.40, "onlinePrice": 3.06, "tag": "Popular" },
+      { "id": 82, "name": "Εκμέκ Κανταΐφι", "description": "Κλασικό ελληνικό γλυκό με κρέμα & σιρόπι", "price": 3.40, "onlinePrice": 3.06, "tag": "" },
+      { "id": 83, "name": "Προφιτερόλ", "description": "Μπαλάκια με κρέμα βανίλια & σοκολάτα", "price": 3.40, "onlinePrice": 3.06, "tag": "" }
+    ]
+  },
+  {
+    "id": "anapsyktika",
+    "label": "Αναψυκτικά & Μπύρες",
+    "icon": "🥤",
+    "items": [
+      { "id": 90, "name": "Coca-Cola 330ml", "description": "Κλασική Coca-Cola κουτάκι", "price": 1.80, "onlinePrice": 1.62, "tag": "" },
+      { "id": 91, "name": "Coca-Cola 500ml", "description": "Coca-Cola μπουκάλι 500ml", "price": 2.20, "onlinePrice": 1.98, "tag": "" },
+      { "id": 92, "name": "Coca-Cola Zero 330ml", "description": "Coca-Cola Zero Sugar κουτάκι", "price": 1.80, "onlinePrice": 1.62, "tag": "" },
+      { "id": 93, "name": "Fanta Λεμόνι 330ml", "description": "Fanta Lemon κουτάκι", "price": 1.80, "onlinePrice": 1.62, "tag": "" },
+      { "id": 94, "name": "Sprite 330ml", "description": "Sprite κουτάκι", "price": 1.80, "onlinePrice": 1.62, "tag": "" },
+      { "id": 95, "name": "Νερό 500ml", "description": "Εμφιαλωμένο νερό", "price": 0.50, "onlinePrice": 0.45, "tag": "" },
+      { "id": 96, "name": "Amstel 330ml", "description": "Amstel κουτάκι", "price": 2.20, "onlinePrice": 1.98, "tag": "" },
+      { "id": 97, "name": "Heineken 330ml", "description": "Heineken κουτάκι", "price": 2.20, "onlinePrice": 1.98, "tag": "" },
+      { "id": 98, "name": "Fix 500ml", "description": "Fix Hellas μπουκάλι", "price": 3.50, "onlinePrice": 3.15, "tag": "Ελληνική" }
+    ]
+  }
+]

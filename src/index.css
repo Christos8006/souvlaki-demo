@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  button,
+  [type='button'],
+  [type='submit'] {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
